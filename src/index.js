@@ -22,6 +22,37 @@ document.addEventListener('DOMContentLoaded', () => {
   const loadMoreButton = document.querySelector('.load-more');
   loadMoreButton.style.display = 'none';
 
+  function createMarkup(images) {
+    return images
+      .map(image => {
+        return `
+    <div class="photo-card">
+      <a href="${image.largeImageURL}" class="pagination__next">
+        <img  class="gallery-item" src="${image.webformatURL}" alt="${image.tags}" loading="lazy" />
+      </a>
+      <div class="info">
+        <p class="info-item">
+           <b>Likes</b>
+          ${image.likes}
+        </p>
+        <p class="info-item">
+          <b>Views</b>
+          ${image.views}
+        </p>
+        <p class="info-item">
+          <b>Comments</b>
+          ${image.comments}
+        </p>
+        <p class="info-item">
+          <b>Downloads</b>
+          ${image.downloads}
+        </p>
+       </div>
+    </div>`;
+      })
+      .join('');
+  }
+
   searchForm.addEventListener('submit', async event => {
     event.preventDefault();
 
@@ -37,31 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         galleryImage.innerHTML = '';
 
-        const imageHtml = images
-          .map(image => {
-            return `<div class="photo-card">
-  <a href="${image.largeImageURL}" class="pagination__next"><img  class="gallery-item" src="${image.webformatURL}" alt="${image.tags}" loading="lazy" /></a>
-  <div class="info">
-  <p class="info-item">
-    <b>Likes</b>
-  ${image.likes}
-  </p>
-  <p class="info-item">
-    <b>Views</b>
-  ${image.views}
-  </p>
-  <p class="info-item">
-    <b>Comments</b>
-  ${image.comments}
-  </p>
-  <p class="info-item">
-    <b>Downloads</b>
-  ${image.downloads}
-  </p>
-</div>
-</div>`;
-          })
-          .join('');
+        const imageHtml = createMarkup(images);
 
         galleryImage.innerHTML = imageHtml;
         lightbox.refresh();
@@ -88,27 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const images = imagesData.hits;
         const totalHits = imagesData.totalHits;
 
-        const imageHtml = images
-          .map(image => {
-            return `<div class="photo-card">
-              <a href="${image.largeImageURL}" class="pagination__next"><img class="gallery-item" src="${image.webformatURL}" alt="${image.tags}" loading="lazy" /></a>
-              <div class="info">
-                <p class="info-item">
-                  <b>Likes</b>${image.likes}
-                </p>
-                <p class="info-item">
-                  <b>Views</b>${image.views}
-                </p>
-                <p class="info-item">
-                  <b>Comments</b>${image.comments}
-                </p>
-                <p class="info-item">
-                  <b>Downloads</b>${image.downloads}
-                </p>
-              </div>
-            </div>`;
-          })
-          .join('');
+        const imageHtml = createMarkup(images);
 
         galleryImage.innerHTML += imageHtml;
         lightbox.refresh();
